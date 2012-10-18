@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net;
 using System.ComponentModel;
-//using System.ComponentModel;
 
 namespace BPM
 {
@@ -17,32 +16,39 @@ namespace BPM
         static void Main(string[] args)
         {
             //do we want to run from the arguments?
-            bool runfromargs = false;
+            bool runfromargs = true;
 
             checkDirs();
             if (runfromargs)
             {
-                switch (args[0])
+                if (args.Length < 1)
                 {
-                    case "get-install":
-                        if (args[1] != "" || args[1] != null)
-                        {
-                            getInstall(args[1]);
-                        }
-                        else
-                        {
+                    showHelp();
+                }
+                else
+                {
+                    switch (args[0])
+                    {
+                        case "help":
                             showHelp();
-                        }
-                        break;
-                    case "help":
-                        showHelp();
-                        break;
-                    case "index":
-                        indexBukkitDev();
-                        break;
-                    default:
-                        showHelp();
-                        break;
+                            break;
+                        case "get-install":
+                            if (args[1] != "" || args[1] != null)
+                            {
+                                getInstall(args[1]);
+                            }
+                            else
+                            {
+                                showHelp();
+                            }
+                            break;
+                        case "generate-index":
+                            indexBukkitDev();
+                            break;
+                        default:
+                            showHelp();
+                            break;
+                    }
                 }
             }
             else
@@ -50,6 +56,17 @@ namespace BPM
                 //do custom debugging and coding here
                 getInstall("glassback");
             }
+        }
+
+        static void showHelp()
+        {
+            Console.WriteLine("<------------------>");
+            Console.WriteLine("bpm.exe help - shows this help.");
+            Console.WriteLine("--------");
+            Console.WriteLine("bpm.exe get-install <nameofplugin> - looks up latest project file of the specified plugin and then downloads it as a .jar to plugins\\.");
+            Console.WriteLine("--------");
+            Console.WriteLine("bpm.exe generate-index - indexes all of dev.bukkit.org/server-mods (may take quite awhile!) and outputs them all in a csv under indexes\\main.csv");
+            Console.WriteLine("<------------------>");
         }
 
         static void getInstall(string pluginname)
@@ -98,13 +115,8 @@ namespace BPM
                 checkDirs();
                 Console.WriteLine("Downloading " + pluginname + "....");
                 DownloadFile(currline.Split(',')[0], "plugins\\" + pluginname + ".jar");
-                Console.WriteLine("Finished downloading" + pluginname + "!");
+                Console.WriteLine("Finished downloading " + pluginname + "!");
             }
-        }
-
-        static void showHelp()
-        {
-            
         }
 
         static void indexBukkitDev()
