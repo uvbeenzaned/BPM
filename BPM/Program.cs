@@ -113,9 +113,17 @@ namespace BPM
                 pagelines.Clear();
                 File.Delete(tmpfilename);
                 checkDirs();
-                Console.WriteLine("Downloading " + pluginname + "....");
-                DownloadFile(currline.Split(',')[0], "plugins\\" + pluginname + ".jar");
-                Console.WriteLine("Finished downloading " + pluginname + "!");
+                string newpname = currline.Split(',')[0].Split('/')[currline.Split(',')[0].Split('/').Length - 1];
+                if (!string.IsNullOrWhiteSpace(newpname))
+                {
+                    Console.WriteLine("Downloading " + newpname + "....");
+                    DownloadFile(currline.Split(',')[0], "plugins\\" + newpname);
+                    Console.WriteLine("Finished downloading " + newpname + "!");
+                }
+                else
+                {
+                    Console.WriteLine("The name of the plugin you specified does not exist on dev.bukkit.org!");
+                }
             }
         }
 
