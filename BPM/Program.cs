@@ -71,6 +71,7 @@ namespace BPM
 
         static void getInstall(string pluginname)
         {
+            Console.WriteLine("Parsing BukkitDev pages....");
             string tmpfilename = "pages\\" + pluginname + "tmp.htm";
             DownloadFile("http://dev.bukkit.org/server-mods/" + pluginname + "/", tmpfilename);
             if (File.Exists(tmpfilename))
@@ -162,9 +163,9 @@ namespace BPM
                 {
                     break;
                 }
+                string currline = "";
                 foreach (var line in pagelines)
                 {
-                    string currline = "";
                     //<td class="col-project"><h2><a href="http://dev.bukkit.org/server-mods/quests/">Quests</a></h2></td>
                     if (line.Contains("<td class=\"col-project\">"))
                     {
@@ -172,7 +173,7 @@ namespace BPM
                         {
                             if (item.EndsWith("</a", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                currline = item.Replace("</a", "");
+                                currline = "\"" + item.Replace("</a", "") + "\",";
                                 break;
                             }
                         }
@@ -180,8 +181,24 @@ namespace BPM
                         {
                             if (item.StartsWith("/", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                currline = currline + "," + "http://dev.bukkit.org" + item;
+                                currline = currline + "http://dev.bukkit.org" + item;
                                 break;
+                            }
+                        }
+                    }
+                    if (line.Contains("<td class=\"col-date\">"))
+                    {
+                        bool stop = false;
+                        foreach (var item in line.Split('\"'))
+                        {
+                            if (stop == true)
+                            {
+                                currline = currline + "," + "\"" + item + "\"";
+                                break;
+                            }
+                            if (item.Contains("title"))
+                            {
+                                stop = true;
                             }
                         }
                         newlines.Add(currline);
