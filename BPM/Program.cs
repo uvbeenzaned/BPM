@@ -201,6 +201,20 @@ namespace BPM
                                 stop = true;
                             }
                         }
+                    }
+                    if (line.Contains("<ul class=\"comma-separated-list\">"))
+                    {
+                        string users = "\"";
+                        foreach (string user in line.Split('>'))
+                        {
+                            if (user.Contains("</a"))
+                            {
+                                users = users + user.Replace("</a", "") + ", ";
+                            }
+                        }
+                        users = users.TrimEnd(',', ' ');
+                        users = users + "\"";
+                        currline = currline + "," + users;
                         newlines.Add(currline);
                         i++;
                     }
