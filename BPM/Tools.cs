@@ -14,7 +14,7 @@ namespace BPM
             Console.WriteLine("<------------------>");
             Console.WriteLine("bpm.exe help - shows this help.");
             Console.WriteLine("--------");
-            Console.WriteLine("bpm.exe get-install <nameofplugin> - looks up latest project file of the specified plugin and then downloads it as a .jar to plugins\\.");
+            Console.WriteLine("bpm.exe get-install [nameofplugin] <nameofplugin2> - looks up latest project file of the specified plugin and then downloads it to plugins\\.");
             Console.WriteLine("--------");
             Console.WriteLine("bpm.exe generate-index - indexes all of dev.bukkit.org/server-mods (may take quite awhile!) and outputs them all in a csv under indexes\\main.csv");
             Console.WriteLine("<------------------>");

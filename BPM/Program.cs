@@ -33,9 +33,17 @@ namespace BPM
                             Tools.showHelp();
                             break;
                         case "get-install":
-                            if (args[1] != "" || args[1] != null)
+                            if (args.Length > 1)
                             {
-                                Functions.getInstall(args[1]);
+                                bool skip = true;
+                                foreach (string plugin in args)
+                                {
+                                    if (!skip)
+                                    {
+                                        Functions.getInstall(plugin);
+                                    }
+                                    skip = false;
+                                }
                             }
                             else
                             {
