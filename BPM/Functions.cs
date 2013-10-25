@@ -66,7 +66,7 @@ namespace BPM
                 }
                 else
                 {
-                    Console.WriteLine("The name of the plugin you specified does not exist on dev.bukkit.org!");
+                    Console.WriteLine("The name of the plugin you specified does not exist on dev.bukkit.org or the site is down.");
                 }
             }
         }
