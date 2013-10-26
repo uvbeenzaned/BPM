@@ -50,6 +50,50 @@ namespace BPM
                                 Tools.showHelp();
                             }
                             break;
+                        case "get-install-craftbukkit":
+                            if(args.Length > 1)
+                            {
+                                switch(args[1])
+                                {
+                                    case "rb":
+                                        Functions.getInstallBukkit(BukkitProjectTypes.CRAFTBUKKIT, BukkitDownloadTypes.RB);
+                                        break;
+                                    case "beta":
+                                        Functions.getInstallBukkit(BukkitProjectTypes.CRAFTBUKKIT, BukkitDownloadTypes.BETA);
+                                        break;
+                                    case "dev":
+                                        Functions.getInstallBukkit(BukkitProjectTypes.CRAFTBUKKIT, BukkitDownloadTypes.DEV);
+                                        break;
+                                    default:
+                                        Tools.showHelp();
+                                        break;
+                                }
+                            }
+                            break;
+                        case "get-install-bukkit":
+                            if (args.Length > 1)
+                            {
+                                switch (args[1])
+                                {
+                                    case "rb":
+                                        Functions.getInstallBukkit(BukkitProjectTypes.BUKKIT, BukkitDownloadTypes.RB);
+                                        break;
+                                    case "beta":
+                                        Functions.getInstallBukkit(BukkitProjectTypes.BUKKIT, BukkitDownloadTypes.BETA);
+                                        break;
+                                    case "dev":
+                                        Functions.getInstallBukkit(BukkitProjectTypes.BUKKIT, BukkitDownloadTypes.DEV);
+                                        break;
+                                    default:
+                                        Tools.showHelp();
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Tools.showHelp();
+                            }
+                            break;
                         case "generate-index":
                             Functions.indexBukkitDev();
                             break;
@@ -72,19 +116,5 @@ namespace BPM
             Console.ReadLine();
             Environment.Exit(0);
         }
-
-        //never used async download setup
-        //public static void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        //{
-        //    Console.WriteLine("Downloaded {0} of {1} bytes. {2} % complete...",
-        //        e.BytesReceived,
-        //        e.TotalBytesToReceive,
-        //        e.ProgressPercentage);
-        //}
-
-        //public static void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
-        //{
-            
-        //}
     }
 }

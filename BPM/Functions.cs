@@ -15,7 +15,7 @@ namespace BPM
         public static void getInstall(string pluginname)
         {
             Console.WriteLine("Parsing BukkitDev pages....");
-            string tmpfilename = "pages\\" + pluginname + "tmp.htm";
+            string tmpfilename = "pages/" + pluginname + "tmp.htm";
             DownloadFile("http://dev.bukkit.org/server-mods/" + pluginname + "/", tmpfilename);
             if (File.Exists(tmpfilename))
             {
@@ -61,7 +61,7 @@ namespace BPM
                 if (!string.IsNullOrWhiteSpace(newpname))
                 {
                     Console.WriteLine("Downloading " + newpname + "....");
-                    DownloadFile(currline.Split(',')[0], "plugins\\" + newpname);
+                    DownloadFile(currline.Split(',')[0], "plugins/" + newpname);
                     Console.WriteLine("Finished downloading " + newpname + "!");
                 }
                 else
@@ -70,16 +70,67 @@ namespace BPM
                 }
             }
         }
+        
+        public static void getInstallBukkit(BukkitProjectTypes bpt, BukkitDownloadTypes bdt, int vnum = 0)
+        {
+            
+            switch(bpt)
+            {
+                case BukkitProjectTypes.CRAFTBUKKIT:
+                    if (bdt == BukkitDownloadTypes.RB)
+                    {
+                        Console.WriteLine("Downloading recommended craftbukkit build...");
+                        DownloadFile(BukkitUrls.CB_REC_URL, BukkitUrls.CB_NAME);
+                        Console.WriteLine("Finished!");
+                    }
+                    if (bdt == BukkitDownloadTypes.BETA)
+                    {
+                        Console.WriteLine("Downloading beta craftbukkit build...");
+                        DownloadFile(BukkitUrls.CB_BETA_URL, BukkitUrls.CB_NAME);
+                        Console.WriteLine("Finished!");
+                    }
+                    if (bdt == BukkitDownloadTypes.DEV)
+                    {
+                        Console.WriteLine("Downloading development craftbukkit build...");
+                        DownloadFile(BukkitUrls.CB_DEV_URL, BukkitUrls.CB_NAME);
+                        Console.WriteLine("Finished!");
+                    }
+                    break;
+                case BukkitProjectTypes.BUKKIT:
+                    if (bdt == BukkitDownloadTypes.RB)
+                    {
+                        Console.WriteLine("Downloading recommended bukkit build...");
+                        DownloadFile(BukkitUrls.B_REC_URL, BukkitUrls.B_NAME);
+                        Console.WriteLine("Finished!");
+                    }
+                    if (bdt == BukkitDownloadTypes.BETA)
+                    {
+                        Console.WriteLine("Downloading beta bukkit build...");
+                        DownloadFile(BukkitUrls.B_BETA_URL, BukkitUrls.B_NAME);
+                        Console.WriteLine("Finished!");
+                    }   
+                    if (bdt == BukkitDownloadTypes.DEV)
+                    {
+                        Console.WriteLine("Downloading development bukkit build...");
+                        DownloadFile(BukkitUrls.B_DEV_URL, BukkitUrls.B_NAME);
+                        Console.WriteLine("Finished!");
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Error!  Specified enum value non-existent!");
+                    break;
+            }
+        }
 
         public static void indexBukkitDev()
         {
             int pgcnt = 1;
             int actualplugincnt = 0;
             Tools.checkDirs();
-            DownloadFile("http://dev.bukkit.org/server-mods/", "pages\\page" + pgcnt + ".htm");
-            if (File.Exists("pages\\page" + pgcnt + ".htm"))
+            DownloadFile("http://dev.bukkit.org/server-mods/", "pages/page" + pgcnt + ".htm");
+            if (File.Exists("pages/page" + pgcnt + ".htm"))
             {
-                pagelines = File.ReadAllLines("pages\\page" + pgcnt + ".htm").ToList<string>();
+                pagelines = File.ReadAllLines("pages/page" + pgcnt + ".htm").ToList<string>();
                 foreach (var line in pagelines)
                 {
                     //<li class="listing-pagination-pages-total">6443 server mods found</li>
@@ -97,10 +148,10 @@ namespace BPM
             List<string> newlines = new List<string>();
             for (int i = 0; i < actualplugincnt; )
             {
-                DownloadFile("http://dev.bukkit.org/server-mods/?page=" + pgcnt.ToString(), "pages\\page" + pgcnt + ".htm");
-                if (File.Exists("pages\\page" + pgcnt + ".htm"))
+                DownloadFile("http://dev.bukkit.org/server-mods/?page=" + pgcnt.ToString(), "pages/page" + pgcnt + ".htm");
+                if (File.Exists("pages/page" + pgcnt + ".htm"))
                 {
-                    pagelines = File.ReadAllLines("pages\\page" + pgcnt + ".htm").ToList<string>();
+                    pagelines = File.ReadAllLines("pages/page" + pgcnt + ".htm").ToList<string>();
                 }
                 else
                 {
@@ -162,7 +213,7 @@ namespace BPM
                         i++;
                     }
                 }
-                using (StreamWriter sw = new StreamWriter("indexes\\main.csv"))
+                using (StreamWriter sw = new StreamWriter("indexes/main.csv"))
                 {
                     foreach (var line in newlines)
                     {
@@ -171,7 +222,7 @@ namespace BPM
                     }
                 }
                 pagelines.Clear();
-                //File.Delete("pages\\page" + pgcnt + ".htm");
+                //File.Delete("pages/page" + pgcnt + ".htm");
                 pgcnt++;
             }
         }
@@ -183,8 +234,9 @@ namespace BPM
             {
                 wc.DownloadFile(new Uri(url), filename);
             }
-            catch (Exception)
+            catch (System.Net.WebException)
             {
+                Console.WriteLine("Download timed out or Bukkit site unavailable!");
             }
         }
     }
