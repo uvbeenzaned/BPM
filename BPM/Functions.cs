@@ -62,10 +62,6 @@ namespace BPM
                 {
                     Console.WriteLine("Downloading " + newpname + "....");
                     DownloadFile(currline.Split(',')[0], "plugins/" + newpname, true);
-                    while(isDownloadInProgress())
-                    {
-                        //wait
-                    }
                     Console.WriteLine("\nFinished downloading " + newpname + "!");
                 }
                 else
@@ -85,19 +81,19 @@ namespace BPM
                     {
                         Console.WriteLine("Downloading recommended craftbukkit build...");
                         DownloadFile(BukkitUrls.CB_REC_URL, BukkitUrls.CB_NAME, true);
-                        Console.WriteLine("Finished!");
+                        Console.WriteLine("\nFinished!");
                     }
                     if (bdt == BukkitDownloadTypes.BETA)
                     {
                         Console.WriteLine("Downloading beta craftbukkit build...");
                         DownloadFile(BukkitUrls.CB_BETA_URL, BukkitUrls.CB_NAME, true);
-                        Console.WriteLine("Finished!");
+                        Console.WriteLine("\nFinished!");
                     }
                     if (bdt == BukkitDownloadTypes.DEV)
                     {
                         Console.WriteLine("Downloading development craftbukkit build...");
                         DownloadFile(BukkitUrls.CB_DEV_URL, BukkitUrls.CB_NAME, true);
-                        Console.WriteLine("Finished!");
+                        Console.WriteLine("\nFinished!");
                     }
                     break;
                 case BukkitProjectTypes.BUKKIT:
@@ -105,19 +101,19 @@ namespace BPM
                     {
                         Console.WriteLine("Downloading recommended bukkit build...");
                         DownloadFile(BukkitUrls.B_REC_URL, BukkitUrls.B_NAME, true);
-                        Console.WriteLine("Finished!");
+                        Console.WriteLine("\nFinished!");
                     }
                     if (bdt == BukkitDownloadTypes.BETA)
                     {
                         Console.WriteLine("Downloading beta bukkit build...");
                         DownloadFile(BukkitUrls.B_BETA_URL, BukkitUrls.B_NAME, true);
-                        Console.WriteLine("Finished!");
+                        Console.WriteLine("\nFinished!");
                     }   
                     if (bdt == BukkitDownloadTypes.DEV)
                     {
                         Console.WriteLine("Downloading development bukkit build...");
                         DownloadFile(BukkitUrls.B_DEV_URL, BukkitUrls.B_NAME, true);
-                        Console.WriteLine("Finished!");
+                        Console.WriteLine("\nFinished!");
                     }
                     break;
                 default:
@@ -241,6 +237,10 @@ namespace BPM
                 {
                     wc.DownloadProgressChanged += wc_DownloadProgressChanged;
                     wc.DownloadFileAsync(new Uri(url), filename);
+                    while (isDownloadInProgress())
+                    {
+                        //wait
+                    }
                 }
                 else
                 {
