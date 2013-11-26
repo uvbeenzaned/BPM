@@ -16,7 +16,7 @@ namespace BPM
         {
             Console.WriteLine("Parsing BukkitDev pages....");
             string tmpfilename = "pages/" + pluginname + "tmp.htm";
-            DownloadFile("http://dev.bukkit.org/server-mods/" + pluginname + "/", tmpfilename);
+            DownloadFile("http://dev.bukkit.org/server-mods/" + pluginname + "/", tmpfilename, false);
             if (File.Exists(tmpfilename))
             {
                 pagelines.Clear();
@@ -37,7 +37,7 @@ namespace BPM
                     }
                 }
                 pagelines.Clear();
-                DownloadFile(downloadpageaddress, tmpfilename);
+                DownloadFile(downloadpageaddress, tmpfilename, false);
                 pagelines = File.ReadAllLines(tmpfilename).ToList<string>();
                 string currline = "";
                 foreach (var line in pagelines)
@@ -61,8 +61,12 @@ namespace BPM
                 if (!string.IsNullOrWhiteSpace(newpname))
                 {
                     Console.WriteLine("Downloading " + newpname + "....");
-                    DownloadFile(currline.Split(',')[0], "plugins/" + newpname);
-                    Console.WriteLine("Finished downloading " + newpname + "!");
+                    DownloadFile(currline.Split(',')[0], "plugins/" + newpname, true);
+                    while(isDownloadInProgress())
+                    {
+                        //wait
+                    }
+                    Console.WriteLine("\nFinished downloading " + newpname + "!");
                 }
                 else
                 {
@@ -80,19 +84,19 @@ namespace BPM
                     if (bdt == BukkitDownloadTypes.RB)
                     {
                         Console.WriteLine("Downloading recommended craftbukkit build...");
-                        DownloadFile(BukkitUrls.CB_REC_URL, BukkitUrls.CB_NAME);
+                        DownloadFile(BukkitUrls.CB_REC_URL, BukkitUrls.CB_NAME, true);
                         Console.WriteLine("Finished!");
                     }
                     if (bdt == BukkitDownloadTypes.BETA)
                     {
                         Console.WriteLine("Downloading beta craftbukkit build...");
-                        DownloadFile(BukkitUrls.CB_BETA_URL, BukkitUrls.CB_NAME);
+                        DownloadFile(BukkitUrls.CB_BETA_URL, BukkitUrls.CB_NAME, true);
                         Console.WriteLine("Finished!");
                     }
                     if (bdt == BukkitDownloadTypes.DEV)
                     {
                         Console.WriteLine("Downloading development craftbukkit build...");
-                        DownloadFile(BukkitUrls.CB_DEV_URL, BukkitUrls.CB_NAME);
+                        DownloadFile(BukkitUrls.CB_DEV_URL, BukkitUrls.CB_NAME, true);
                         Console.WriteLine("Finished!");
                     }
                     break;
@@ -100,19 +104,19 @@ namespace BPM
                     if (bdt == BukkitDownloadTypes.RB)
                     {
                         Console.WriteLine("Downloading recommended bukkit build...");
-                        DownloadFile(BukkitUrls.B_REC_URL, BukkitUrls.B_NAME);
+                        DownloadFile(BukkitUrls.B_REC_URL, BukkitUrls.B_NAME, true);
                         Console.WriteLine("Finished!");
                     }
                     if (bdt == BukkitDownloadTypes.BETA)
                     {
                         Console.WriteLine("Downloading beta bukkit build...");
-                        DownloadFile(BukkitUrls.B_BETA_URL, BukkitUrls.B_NAME);
+                        DownloadFile(BukkitUrls.B_BETA_URL, BukkitUrls.B_NAME, true);
                         Console.WriteLine("Finished!");
                     }   
                     if (bdt == BukkitDownloadTypes.DEV)
                     {
                         Console.WriteLine("Downloading development bukkit build...");
-                        DownloadFile(BukkitUrls.B_DEV_URL, BukkitUrls.B_NAME);
+                        DownloadFile(BukkitUrls.B_DEV_URL, BukkitUrls.B_NAME, true);
                         Console.WriteLine("Finished!");
                     }
                     break;
@@ -127,7 +131,7 @@ namespace BPM
             int pgcnt = 1;
             int actualplugincnt = 0;
             Tools.checkDirs();
-            DownloadFile("http://dev.bukkit.org/server-mods/", "pages/page" + pgcnt + ".htm");
+            DownloadFile("http://dev.bukkit.org/server-mods/", "pages/page" + pgcnt + ".htm", false);
             if (File.Exists("pages/page" + pgcnt + ".htm"))
             {
                 pagelines = File.ReadAllLines("pages/page" + pgcnt + ".htm").ToList<string>();
@@ -148,7 +152,7 @@ namespace BPM
             List<string> newlines = new List<string>();
             for (int i = 0; i < actualplugincnt; )
             {
-                DownloadFile("http://dev.bukkit.org/server-mods/?page=" + pgcnt.ToString(), "pages/page" + pgcnt + ".htm");
+                DownloadFile("http://dev.bukkit.org/server-mods/?page=" + pgcnt.ToString(), "pages/page" + pgcnt + ".htm", false);
                 if (File.Exists("pages/page" + pgcnt + ".htm"))
                 {
                     pagelines = File.ReadAllLines("pages/page" + pgcnt + ".htm").ToList<string>();
@@ -227,17 +231,41 @@ namespace BPM
             }
         }
 
-        private static void DownloadFile(string url, string filename)
+        private static WebClient wc;
+        private static void DownloadFile(string url, string filename, bool async)
         {
-            WebClient wc = new WebClient();
+            wc = new WebClient();
             try
             {
-                wc.DownloadFile(new Uri(url), filename);
+                if(async)
+                {
+                    wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                    wc.DownloadFileAsync(new Uri(url), filename);
+                }
+                else
+                {
+                    wc.DownloadFile(new Uri(url), filename);
+                }
+                
             }
             catch (System.Net.WebException)
             {
                 Console.WriteLine("Download timed out or Bukkit site unavailable!");
             }
+        }
+
+        static bool isDownloadInProgress()
+        {
+            return wc.IsBusy;
+        }
+
+        static void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            for (int i = 0; i < Console.WindowWidth / 6; i++)
+            {
+                Console.Write(' ');
+            }
+            Console.Write("\r" + ((float)e.BytesReceived / 1048576).ToString() + " MB of " + ((float)e.TotalBytesToReceive / 1048576).ToString() + " MB > " + e.ProgressPercentage.ToString() + "%");
         }
     }
 }
