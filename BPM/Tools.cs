@@ -20,7 +20,7 @@ namespace BPM
             Console.WriteLine("--------");
             Console.WriteLine("bpm get-install-craftbukkit [rb, beta, dev] - downloads one of the specified latest builds of craftbukkit.");
             Console.WriteLine("--------");
-            Console.WriteLine("bpm get-install-bukkit [rb, beta, dev] - downloads one of the specified latest builds of craftbukkit.");
+            Console.WriteLine("bpm get-install-bukkit [rb, beta, dev] - downloads one of the specified latest builds of bukkit.");
             Console.WriteLine("--------");
             Console.WriteLine("bpm generate-index - indexes all of dev.bukkit.org/server-mods (may take quite awhile!) and outputs them all in a csv under indexes/main.csv");
             Console.WriteLine("<------------------>");

@@ -237,10 +237,7 @@ namespace BPM
                 {
                     wc.DownloadProgressChanged += wc_DownloadProgressChanged;
                     wc.DownloadFileAsync(new Uri(url), filename);
-                    while (isDownloadInProgress())
-                    {
-                        //wait
-                    }
+                    while (isDownloadInProgress()){}
                 }
                 else
                 {
