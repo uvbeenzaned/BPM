@@ -258,11 +258,37 @@ namespace BPM
 
         static void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            for (int i = 0; i < Console.WindowWidth / 6; i++)
+            for (int i = 0; i < Console.WindowWidth / 4; i++)
             {
                 Console.Write(' ');
             }
-            Console.Write("\r" + ((float)e.BytesReceived / 1048576).ToString() + " MB of " + ((float)e.TotalBytesToReceive / 1048576).ToString() + " MB > " + e.ProgressPercentage.ToString() + "%");
+            string r = cut(((float)e.BytesReceived / 1048576).ToString(), 5);
+            string t = cut(((float)e.TotalBytesToReceive / 1048576).ToString(), 5);
+            string p = cut(e.ProgressPercentage.ToString(), 3) + "%";
+            Console.Write("\r" + r + " MB of " + t + " MB > " + p);
+        }
+
+        static string cut(string s, int a)
+        {
+            string ns = "";
+            char[] ca = s.ToCharArray();
+            if (s.Length > a)
+            {
+                ns = s.Remove(a - 1);
+            }
+            else
+            {
+                if (s.Length < a)
+                {
+                    int max = a - s.Length;
+                    for (int i = max; i >= max; i--)
+                    {
+                        ns = ns + " ";
+                    }
+                    ns = ns + s;
+                }
+            }
+            return ns;
         }
     }
 }
