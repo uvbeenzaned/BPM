@@ -16,7 +16,7 @@ namespace BPM
         {
             Console.WriteLine("Parsing BukkitDev pages....");
             string tmpfilename = "pages/" + pluginname + "tmp.htm";
-            DownloadFile("http://dev.bukkit.org/server-mods/" + pluginname + "/", tmpfilename, false);
+            DownloadFile(BukkitUrls.PLUGIN_SITE_LIST + pluginname + "/", tmpfilename, false);
             if (File.Exists(tmpfilename))
             {
                 pagelines.Clear();
@@ -30,7 +30,7 @@ namespace BPM
                         {
                             if (item.StartsWith("/"))
                             {
-                                downloadpageaddress = "http://dev.bukkit.org" + item;
+                                downloadpageaddress = BukkitUrls.MAIN_PLUGIN_SITE + item;
                                 break;
                             }
                         }
@@ -127,7 +127,7 @@ namespace BPM
             int pgcnt = 1;
             int actualplugincnt = 0;
             Tools.checkDirs();
-            DownloadFile("http://dev.bukkit.org/server-mods/", "pages/page" + pgcnt + ".htm", false);
+            DownloadFile(BukkitUrls.PLUGIN_SITE_LIST, "pages/page" + pgcnt + ".htm", false);
             if (File.Exists("pages/page" + pgcnt + ".htm"))
             {
                 pagelines = File.ReadAllLines("pages/page" + pgcnt + ".htm").ToList<string>();
@@ -148,7 +148,7 @@ namespace BPM
             List<string> newlines = new List<string>();
             for (int i = 0; i < actualplugincnt; )
             {
-                DownloadFile("http://dev.bukkit.org/server-mods/?page=" + pgcnt.ToString(), "pages/page" + pgcnt + ".htm", false);
+                DownloadFile(BukkitUrls.PLUGIN_SITE_LIST + "?page=" + pgcnt.ToString(), "pages/page" + pgcnt + ".htm", false);
                 if (File.Exists("pages/page" + pgcnt + ".htm"))
                 {
                     pagelines = File.ReadAllLines("pages/page" + pgcnt + ".htm").ToList<string>();
@@ -160,7 +160,6 @@ namespace BPM
                 string currline = "";
                 foreach (var line in pagelines)
                 {
-                    //<td class="col-project"><h2><a href="http://dev.bukkit.org/server-mods/quests/">Quests</a></h2></td>
                     if (line.Contains("<td class=\"col-project\">"))
                     {
                         foreach (var item in line.Split('>'))
@@ -175,7 +174,7 @@ namespace BPM
                         {
                             if (item.StartsWith("/", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                currline = currline + "http://dev.bukkit.org" + item;
+                                currline = currline + BukkitUrls.MAIN_PLUGIN_SITE + item.Remove(0, 1);
                                 break;
                             }
                         }
@@ -222,7 +221,6 @@ namespace BPM
                     }
                 }
                 pagelines.Clear();
-                //File.Delete("pages/page" + pgcnt + ".htm");
                 pgcnt++;
             }
         }
