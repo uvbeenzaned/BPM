@@ -12,7 +12,7 @@ namespace BPM
     {
         static List<string> pagelines = new List<string>();
 
-        public static void getInstall(string pluginname)
+        public static void getInstall(string pluginname, string extractmode = "off")
         {
             Console.WriteLine("Parsing BukkitDev pages....");
             string tmpfilename = "pages/" + pluginname + "tmp.htm";
@@ -58,11 +58,29 @@ namespace BPM
                 File.Delete(tmpfilename);
                 Tools.checkDirs();
                 string newpname = currline.Split(',')[0].Split('/')[currline.Split(',')[0].Split('/').Length - 1];
+                string path = Path.Combine("plugins/", newpname);
                 if (!string.IsNullOrWhiteSpace(newpname))
                 {
                     Console.WriteLine("Downloading " + newpname + "....");
-                    DownloadFile(currline.Split(',')[0], "plugins/" + newpname, true);
+                    DownloadFile(currline.Split(',')[0], path, true);
                     Console.WriteLine("\nFinished downloading " + newpname + "!");
+                    //while (isDownloadInProgress()) { }
+                    if (path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    {
+                        switch (extractmode)
+                        {
+                            case "x":
+                                Tools.smartExtractPluginsOnly(path);
+                                break;
+                            case "e":
+                                Tools.extractAll(path);
+                                break;
+                            case "off":
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
                 else
                 {
@@ -122,7 +140,7 @@ namespace BPM
             }
         }
 
-        public static void indexBukkitDev()
+        public static void indexBukkitDev(string outputname = "main.csv")
         {
             int pgcnt = 1;
             int actualplugincnt = 0;
@@ -216,7 +234,7 @@ namespace BPM
                         i++;
                     }
                 }
-                using (StreamWriter sw = new StreamWriter("indexes/main.csv"))
+                using (StreamWriter sw = new StreamWriter("indexes/" + outputname))
                 {
                     foreach (var line in newlines)
                     {
@@ -264,33 +282,10 @@ namespace BPM
             {
                 Console.Write(' ');
             }
-            string r = cut(((float)e.BytesReceived / 1048576).ToString(), 5);
-            string t = cut(((float)e.TotalBytesToReceive / 1048576).ToString(), 5);
-            string p = cut(e.ProgressPercentage.ToString(), 3) + "%";
+            string r = Tools.cut(((float)e.BytesReceived / 1048576).ToString(), 5);
+            string t = Tools.cut(((float)e.TotalBytesToReceive / 1048576).ToString(), 5);
+            string p = Tools.cut(e.ProgressPercentage.ToString(), 3) + "%";
             Console.Write("\r" + r + " MB of " + t + " MB > " + p);
-        }
-
-        static string cut(string s, int a)
-        {
-            string ns = "";
-            char[] ca = s.ToCharArray();
-            if (s.Length > a)
-            {
-                ns = s.Remove(a - 1);
-            }
-            else
-            {
-                if (s.Length < a)
-                {
-                    int max = a - s.Length;
-                    for (int i = max; i >= max; i--)
-                    {
-                        ns = ns + " ";
-                    }
-                    ns = ns + s;
-                }
-            }
-            return ns;
         }
     }
 }

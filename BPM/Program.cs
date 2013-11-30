@@ -35,14 +35,23 @@ namespace BPM
                         case "get-install":
                             if (args.Length > 1)
                             {
-                                bool skip = true;
+                                int skip = 1;
+                                string extractmode = "off";
+                                if (args[1].Equals("-x", StringComparison.OrdinalIgnoreCase) || args[1].Equals("-e", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    extractmode = args[1].Replace("-", "");
+                                    skip++;
+                                }
                                 foreach (string plugin in args)
                                 {
-                                    if (!skip)
+                                    if (skip == 0)
                                     {
-                                        Functions.getInstall(plugin);
+                                        Functions.getInstall(plugin, extractmode);
                                     }
-                                    skip = false;
+                                    else
+                                    {
+                                        skip--;
+                                    }
                                 }
                             }
                             else
@@ -95,7 +104,14 @@ namespace BPM
                             }
                             break;
                         case "generate-index":
-                            Functions.indexBukkitDev();
+                            if (args.Length > 1)
+                            {
+                                Functions.indexBukkitDev(args[1]);
+                            }
+                            else
+                            {
+                                Functions.indexBukkitDev();
+                            }
                             break;
                         default:
                             Tools.showHelp();
