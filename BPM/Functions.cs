@@ -208,6 +208,10 @@ namespace BPM
                         users = users.TrimEnd(',', ' ');
                         users = users + "\"";
                         currline = currline + "," + users;
+                    }
+                    if (line.Contains("<td class=\"col-status\">"))
+                    {
+                        currline = currline + "," + "\"" + line.Split('>')[1].Replace("</td", "") + "\"";
                         newlines.Add(currline);
                         i++;
                     }
