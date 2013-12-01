@@ -64,7 +64,6 @@ namespace BPM
                     Console.WriteLine("Downloading " + newpname + "....");
                     DownloadFile(currline.Split(',')[0], path, true);
                     Console.WriteLine("\nFinished downloading " + newpname + "!");
-                    //while (isDownloadInProgress()) { }
                     if (path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                     {
                         switch (extractmode)
