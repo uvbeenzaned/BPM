@@ -104,13 +104,20 @@ namespace BPM
                             }
                             break;
                         case "generate-index":
-                            if (args.Length > 1)
+                            if(args.Length > 2)
                             {
-                                Functions.indexBukkitDev(args[1]);
+                                Functions.indexBukkitDev(args[1], args[2]);
                             }
                             else
                             {
-                                Functions.indexBukkitDev();
+                                if (args.Length > 1)
+                                {
+                                    Functions.indexBukkitDev(args[1]);
+                                }
+                                else
+                                {
+                                    Functions.indexBukkitDev();
+                                }
                             }
                             break;
                         default:

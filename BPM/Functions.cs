@@ -139,8 +139,14 @@ namespace BPM
             }
         }
 
-        public static void indexBukkitDev(string outputname = "main.csv")
+        public static void indexBukkitDev(string outputname = "main.csv", string url = "")
         {
+            if(url != "")
+            {
+                string mainsite = url.Replace("http://", "").Split('/')[0];
+                BukkitUrls.MAIN_PLUGIN_SITE = "http://" + mainsite + "/";
+                BukkitUrls.PLUGIN_SITE_LIST = url;
+            }
             int pgcnt = 1;
             int actualplugincnt = 0;
             Tools.checkDirs();

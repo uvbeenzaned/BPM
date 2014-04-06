@@ -23,7 +23,7 @@ namespace BPM
             Console.WriteLine("--------");
             Console.WriteLine("bpm get-install-bukkit [rb, beta, dev] - downloads one of the specified latest builds of bukkit.");
             Console.WriteLine("--------");
-            Console.WriteLine("bpm generate-index <\"filename\"> - indexes all of dev.bukkit.org/server-mods (may take quite awhile!) and outputs them all in a csv under indexes/. (filename is optional)");
+            Console.WriteLine("bpm generate-index <\"filename\"> <\"optional external curse url\"> - indexes all of dev.bukkit.org/server-mods (may take quite awhile!) and outputs them all in a csv under indexes/. (filename is optional) (url is optional)");
             Console.WriteLine("<------------------>");
         }
 
