@@ -42,11 +42,11 @@ namespace BPM
                 string currline = "";
                 foreach (var line in pagelines)
                 {
-                    if (line.Contains("<dd><a href=\"") && line.Contains("</a></dd>"))
+                    if (line.Contains("<dt>Filename</dt><dd><a href=\"") && line.Contains("</a></dd>"))
                     {
                         foreach (var item in line.Split('\"'))
                         {
-                            if (item.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase))
+                            if (item.StartsWith("http://dev.bukkit.org/media", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 currline = item;
                                 break;
