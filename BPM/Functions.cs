@@ -42,7 +42,7 @@ namespace BPM
                 string currline = "";
                 foreach (var line in pagelines)
                 {
-                    if (line.Contains("<dt>Filename</dt><dd><a href=\"") && line.Contains("</a></dd>"))
+                    if (line.Contains("<dd><a href=\"") && line.Contains("</a></dd>"))
                     {
                         foreach (var item in line.Split('\"'))
                         {
